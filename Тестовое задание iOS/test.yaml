@@ -1,0 +1,169 @@
+---
+swagger: '2.0'
+
+
+################################################################################
+#                              API Information                                 #
+################################################################################
+
+info:
+  version: 1.0.0
+  title: Test App Napoleon API
+  description: |
+    
+    
+  contact:
+    name: Михайлов Артем 
+    email: mag@napoleonit.ru
+    url: http://napoleonit.ru
+
+    
+################################################################################
+#                  Host, Base Path, Schemes and Content Types                  #
+################################################################################
+
+schemes:
+  - https
+host: s3.eu-central-1.amazonaws.com
+basePath: /sl.files/
+
+
+################################################################################
+#                                   Tags                                       #
+################################################################################
+
+#tags:
+
+  
+################################################################################
+#                                   Parameters                                 #
+################################################################################
+
+#parameters:
+
+
+################################################################################
+#                                      Paths                                   #
+################################################################################
+
+paths:
+
+  "/banners.json":
+    get:
+      description: 'Запрос списка баннеров'
+      operationId: banners
+      
+      responses:
+        200:
+          description: 'Список элементов'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/banner'
+          
+        default:
+          description: 'unexpected error'
+          schema:
+            $ref: '#/definitions/errorModel'
+
+  "/offers.json":
+    get:
+      description: 'Запрос списка предложений'
+      operationId: offers
+      
+      responses:
+        200:
+          description: 'Список предложений'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/offer'
+          
+        default:
+          description: 'unexpected error'
+          schema:
+            $ref: '#/definitions/errorModel'
+  
+  
+################################################################################
+#                                 Definitions                                  #
+################################################################################
+
+definitions:
+
+  banner:
+    description: 'Баннер'
+    required:
+    - id
+    properties:
+      id:
+        type: string
+        description: 'Идентификатор элемента (системный параметр, в задании не важен)'
+      title:
+        type: string
+        description: 'Заголовок элемента'
+      desc:
+        type: string
+        description: 'Описание элемента'
+      image: 
+        type: string
+        description: 'Ссылка на изображение (используется сервис, выбирающий случайное изображение нужного размера, поэтому при каждом обращении будет новое изображение)'
+
+  offer:
+    description: 'Элемент списка'
+    required:
+    - id
+    - title
+    - groupName
+    - type
+    properties:
+      id:
+        type: string
+        description: 'Идентификатор элемента (системный параметр, в задании не важен)'
+      title:
+        type: string
+        description: 'Название элемента'
+      desc:
+        type: string
+        description: 'Описание элемента'
+      groupName:
+        type: string
+        description: 'Название группы (секции), элементы с одинаковым значением этого параметра должны отображаться в одной секции'
+      type:
+        type: string
+        description: 'Тип элемента'
+        enum:
+        - product
+        - item
+      image:
+        type: string
+        description: 'Ссылка на изображение (используется сервис, выбирающий случайное изображение нужного размера, поэтому при каждом обращении будет новое изображение)'
+      price:
+        type: number
+        format: float
+        description: 'Стоимость товара, приходит только в элементах с типом \"product\"'
+        minimum: 0
+      discount:
+        type: number
+        format: float
+        description: 'Процент скидки, приходит только в элементах с типом \"product\"'
+        maximum: 1
+        minimum: 0
+
+  errorModel:
+    description: 'Стандартная модель ошибки'
+    type: object
+    required:
+    - message
+    - code
+    properties:
+      message:
+        type: string
+        description: 'Текст сообщения об ошибке'
+      code:
+        type: integer
+        maximum: 600
+        minimum: 100
+    
+          
+          
